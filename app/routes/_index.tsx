@@ -24,14 +24,14 @@ export default function Index() {
   const { revalidate } = useRevalidator();
 
   useEffect(() => {
-    const id = setInterval(revalidate, 1000);
+    const id = setInterval(revalidate, 100);
     return () => clearInterval(id);
   }, [revalidate]);
 
   
   return (<>
     <h1 className="text-blue-500 text-3xl">OPCUA Client</h1>
-    <p><span className="font-bold text-red-500">{loaderData.item} :</span> {loaderData.value}</p>
+    <p><span className="font-bold text-red-500">{loaderData.data.map((k)=>{return <div key={k}>{k}</div>})}</span></p>
     </>
   );
 }

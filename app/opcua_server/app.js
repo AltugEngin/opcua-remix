@@ -1,14 +1,15 @@
-const { AttributeIds, OPCUAClient, TimestampsToReturn } = require("/Users/aengin/Desktop/Project/opcua-remix/node_modules/node-opcua");
-const endpointUrl = "opc.tcp://192.168.54.54:49320";
-const {writeFileSync, readFileSync,appendFileSync, writeFile}=require("fs")
+const { OPCUAClient, TimestampsToReturn } = require("node-opcua");
+const {readFileSync, writeFile}=require("fs")
 const app=require("express")()
+const _=require("lodash")
+const {itemsToMonitor}=require('./items')
+//const endpointUrl = "opc.tcp://192.168.54.54:49320";
+const endpointUrl = "opc.tcp://192.168.241.1:49320";
 const port=5000
 
-
-
-
 let client, session, subscription;
-const data=[[0,0],[0,0]]
+const data=_.times(itemsToMonitor.length,_.stubArray)
+
 async function createOPCUAClient() {
     
     client = OPCUAClient.create({
@@ -41,16 +42,6 @@ async function createOPCUAClient() {
         console.log(" TERMINATED ------------------------------>");
       });
 
-    const itemsToMonitor = [
-        {
-            nodeId: "ns=2;s=MelaminPres5.KOM3060-S0.PRESLENEN_LEVHA_ADET",
-            //attributeId: AttributeIds.Value,
-        },
-        {
-            nodeId: "ns=2;s=MelaminPres5.KOM3060-S0.HIDROLIK_YAG_SICAKLIGI",
-            //attributeId: AttributeIds.Value,
-        }
-    ];
 
     
     const parameters = {
@@ -66,25 +57,14 @@ async function createOPCUAClient() {
     
     monitoredItem.on("changed", (monitoredItem,dataValue,index) => {
       
-      
-      //console.log(monitoredItem.itemToMonitor.nodeId.value);
-      //console.log(dataValue.value.value)
-      //console.log(dataValue)
       data[index][0]=(monitoredItem.itemToMonitor.nodeId.value)
       data[index][1]=(dataValue.value.value)
       console.log(data)
-      
-      //console.log(data)
       writeFile("./data_async.json",JSON.stringify({data}),{encoding:'utf-8',flag:'w'},(res)=>{console.log(res)})
-      //writeFileSync("./data.json",JSON.stringify({index:index,value:(dataValue.value.value),item:(monitoredItem.itemToMonitor.nodeId.value)}),'utf-8')
-      //appendFileSync("./data.json",JSON.stringify({"index":index,"value":(dataValue.value.value),"item":(monitoredItem.itemToMonitor.nodeId.value)}),'utf-8')
-      
-      data_json=JSON.parse(readFileSync('./data_async.json', 'utf8'));
+      let data_json=JSON.parse(readFileSync('./data_async.json', 'utf8'));
       app.get('/api', (req, res) => {
       res.json(data_json)
-      
     })
-      
     });    
   }
   

@@ -14,9 +14,9 @@
     "@remix-run/node": "^2.11.1",
     "@remix-run/react": "^2.11.1",
     "@remix-run/serve": "^2.11.1",
-    "express": "^4.19.2",
+    
     "isbot": "^4.1.0",
-    "node-opcua": "^2.130.0",
+    
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
