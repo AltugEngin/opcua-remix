@@ -1,48 +1,37 @@
 import type { MetaFunction } from "@remix-run/node";
+import { useLoaderData,useRevalidator } from "@remix-run/react";
+import { useEffect } from "react";
+import { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "OPCUA Client" },
+    { name: "OPCUA Client", content: "Welcome" },
   ];
 };
 
+
+
+export const loader: LoaderFunction = async () => {
+  const response = await fetch('http://localhost:5000/api')
+  return json(await response.json())
+}
+
 export default function Index() {
-  return (
-    <div className="font-sans p-4">
-      <h1 className="text-3xl">Welcome to Remix</h1>
-      <ul className="list-disc mt-4 pl-6 space-y-2">
-        <li>
-          <a
-            className="text-blue-700 underline visited:text-purple-900"
-            target="_blank"
-            href="https://remix.run/start/quickstart"
-            rel="noreferrer"
-          >
-            5m Quick Start
-          </a>
-        </li>
-        <li>
-          <a
-            className="text-blue-700 underline visited:text-purple-900"
-            target="_blank"
-            href="https://remix.run/start/tutorial"
-            rel="noreferrer"
-          >
-            30m Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            className="text-blue-700 underline visited:text-purple-900"
-            target="_blank"
-            href="https://remix.run/docs"
-            rel="noreferrer"
-          >
-            Remix Docs
-          </a>
-        </li>
-      </ul>
-    </div>
+
+  const loaderData = useLoaderData<typeof loader>();
+  const { revalidate } = useRevalidator();
+
+  useEffect(() => {
+    const id = setInterval(revalidate, 1000);
+    return () => clearInterval(id);
+  }, [revalidate]);
+
+  
+  return (<>
+    <h1 className="text-blue-500 text-3xl">OPCUA Client</h1>
+    <p><span className="font-bold text-red-500">{loaderData.item} :</span> {loaderData.value}</p>
+    </>
   );
 }
