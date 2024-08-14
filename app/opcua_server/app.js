@@ -3,8 +3,8 @@ const {readFileSync, writeFile}=require("fs")
 const app=require("express")()
 const _=require("lodash")
 const {itemsToMonitor}=require('./items')
-//const endpointUrl = "opc.tcp://192.168.54.54:49320";
-const endpointUrl = "opc.tcp://192.168.241.1:49320";
+const endpointUrl = "opc.tcp://192.168.54.54:49320";
+//const endpointUrl = "opc.tcp://192.168.241.1:49320";
 const port=5000
 
 let client, session, subscription;
@@ -60,10 +60,18 @@ async function createOPCUAClient() {
       data[index][0]=(monitoredItem.itemToMonitor.nodeId.value)
       data[index][1]=(dataValue.value.value)
       console.log(data)
-      writeFile("./data_async.json",JSON.stringify({data}),{encoding:'utf-8',flag:'w'},(res)=>{console.log(res)})
-      let data_json=JSON.parse(readFileSync('./data_async.json', 'utf8'));
+      const datasUpdated = data.map(kk => {
+        const dataCopy = { ...kk };
+        return dataCopy;
+      });
+      
+      writeFile("./data_async.json",JSON.stringify(datasUpdated),{encoding:'utf-8',flag:'w'},(res)=>{console.log(res)})
+      
+      console.log(typeof file)
       app.get('/api', (req, res) => {
-      res.json(data_json)
+        
+        res.json(JSON.parse(readFileSync('./data_async.json', 'utf8')));
+        
     })
     });    
   }
