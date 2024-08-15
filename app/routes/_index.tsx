@@ -31,15 +31,14 @@ export default function Index() {
     const id = setInterval(revalidate, 1000);
     return () => clearInterval(id);
   }, [revalidate]);
+  
 
-  const newData=loaderData;
-  
-  //console.log(newData.map((kk)=>{console.log(newData[kk][0],"  :  ",newData[kk][1])}))
-  
+
   return (<>
     <h1 className="text-blue-500 text-3xl">OPCUA Client</h1>
-    <p><span className="text-red-500 font-bold mr-5">{newData[0][0]}</span><span className="text-blue-500 font-bold">{newData[0][1]}</span></p>
-    <p><span className="text-red-500 font-bold mr-5">{newData[1][0]}</span><span className="text-blue-500 font-bold">{newData[1][1]}</span></p>  
+    <p><span className="text-red-500 font-bold mr-5">{loaderData[0].item}</span><span className="text-blue-500 font-bold">{loaderData[0].value}</span></p>
+    <p><span className="text-red-500 font-bold mr-5">{loaderData[1].item}</span><span className="text-blue-500 font-bold">{loaderData[1].value}</span></p>
+    <p><span className="text-red-500 font-bold mr-5">{loaderData[2].item}</span><span className="text-blue-500 font-bold">{loaderData[2].value}</span></p>  
     </>
   );
 }

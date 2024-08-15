@@ -1,14 +1,13 @@
 const { OPCUAClient, TimestampsToReturn } = require("node-opcua");
-const {readFileSync, writeFile}=require("fs")
 const app=require("express")()
-const _=require("lodash")
+
 const {itemsToMonitor}=require('./items')
 const endpointUrl = "opc.tcp://192.168.54.54:49320";
 //const endpointUrl = "opc.tcp://192.168.241.1:49320";
 const port=5000
 
 let client, session, subscription;
-const data=_.times(itemsToMonitor.length,_.stubArray)
+let data=[]
 
 async function createOPCUAClient() {
     
@@ -56,22 +55,17 @@ async function createOPCUAClient() {
     );
     
     monitoredItem.on("changed", (monitoredItem,dataValue,index) => {
-      
-      data[index][0]=(monitoredItem.itemToMonitor.nodeId.value)
-      data[index][1]=(dataValue.value.value)
-      console.log(data)
-      const datasUpdated = data.map(kk => {
-        const dataCopy = { ...kk };
-        return dataCopy;
-      });
-      
-      writeFile("./data_async.json",JSON.stringify(datasUpdated),{encoding:'utf-8',flag:'w'},(res)=>{console.log(res)})
-      
-      console.log(typeof file)
+
+      if(!data.find(kk=>kk.index===index)){
+      data.push({index:index,item:(monitoredItem.itemToMonitor.nodeId.value),value:(dataValue.value.value)})
+      } else {
+        data[index].index=index;
+        data[index].item=(monitoredItem.itemToMonitor.nodeId.value);
+        data[index].value=(dataValue.value.value)
+      }
+
       app.get('/api', (req, res) => {
-        
-        res.json(JSON.parse(readFileSync('./data_async.json', 'utf8')));
-        
+        res.json(data);
     })
     });    
   }
