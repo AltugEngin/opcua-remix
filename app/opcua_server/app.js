@@ -55,18 +55,28 @@ async function createOPCUAClient() {
     );
     
     monitoredItem.on("changed", (monitoredItem,dataValue,index) => {
-
-      if(!data.find(kk=>kk.index===index)){
-      data.push({index:index,item:(monitoredItem.itemToMonitor.nodeId.value),value:(dataValue.value.value)})
-      } else {
-        data[index].index=index;
-        data[index].item=(monitoredItem.itemToMonitor.nodeId.value);
-        data[index].value=(dataValue.value.value)
+      try {
+        if(!data.find(kk=>kk.index===index)){
+          data.push({index:index,item:(monitoredItem.itemToMonitor.nodeId.value),value:(dataValue.value.value)})
+          } else {
+            data[index].index=index;
+            console.log(data[index].index)
+            data[index].item=(monitoredItem.itemToMonitor.nodeId.value);
+            data[index].value=(dataValue.value.value)
+          }
+    
+          app.get('/api', (req, res) => {
+            res.json(data);
+        })
+        
+      } catch (error) {
+        console.log(error)
+        app.get('/api', (req, res) => {
+          res.json(data);
+      })
       }
 
-      app.get('/api', (req, res) => {
-        res.json(data);
-    })
+     
     });    
   }
   

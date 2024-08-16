@@ -7,6 +7,7 @@ import {
   isRouteErrorResponse,
   useRouteError,
 } from "@remix-run/react";
+import { useState } from "react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -23,7 +24,7 @@ export const loader: LoaderFunction = async () => {
 }
 
 export default function Index() {
-
+  
   const loaderData = useLoaderData<typeof loader>();
   const { revalidate } = useRevalidator();
 
@@ -32,13 +33,17 @@ export default function Index() {
     return () => clearInterval(id);
   }, [revalidate]);
   
-
+  
+  const rows = [];
+  for (let i = 0; i < loaderData.length; i++) {
+    rows.push(<p key={i}><span className="text-red-500 font-bold mr-5">{loaderData[i].item}</span><span className="text-blue-500 font-bold">{loaderData[i].value}</span></p>);
+    
+}
 
   return (<>
-    <h1 className="text-blue-500 text-3xl">OPCUA Client</h1>
-    <p><span className="text-red-500 font-bold mr-5">{loaderData[0].item}</span><span className="text-blue-500 font-bold">{loaderData[0].value}</span></p>
-    <p><span className="text-red-500 font-bold mr-5">{loaderData[1].item}</span><span className="text-blue-500 font-bold">{loaderData[1].value}</span></p>
-    <p><span className="text-red-500 font-bold mr-5">{loaderData[2].item}</span><span className="text-blue-500 font-bold">{loaderData[2].value}</span></p>  
+    <h1 className="text-blue-500 text-3xl my-10">OPCUA Client</h1>
+     {rows}
+     
     </>
   );
 }
@@ -69,3 +74,13 @@ export function ErrorBoundary() {
     return <h1>Unknown Error</h1>;
   }
 }
+
+
+/*
+
+<p><span className="text-red-500 font-bold mr-5">{loaderData[0].item}</span><span className="text-blue-500 font-bold">{loaderData[0].value}</span></p>
+    <p><span className="text-red-500 font-bold mr-5">{loaderData[1].item}</span><span className="text-blue-500 font-bold">{loaderData[1].value}</span></p>
+    <p><span className="text-red-500 font-bold mr-5">{loaderData[2].item}</span><span className="text-blue-500 font-bold">{loaderData[2].value}</span></p> 
+
+
+    */
