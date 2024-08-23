@@ -1,40 +1,19 @@
-# Welcome to Remix!
+# A Sample OPCUA Client App
 
-- 📖 [Remix docs](https://remix.run/docs)
+- Technologies used ==> Remix.run | Chart.js | Node.js (node-opcua) | Express.js
 
-## Development
+- This template can be used to develop Remix.run frontend applications which need to consume periodically changing OPCUA variables. Project consists of two seperate servers.
+        -- 1) BACKEND app/opcua_server/app.js ==> 
+        This server should always run with the command
+        ```shellscript
+        node app.js
+        ```
+        You will need to change `endpoint url` and `items.js` according to your needs
 
-Run the dev server:
+        -- 2) FRONTEND
+        Remix.run server
+        ```shellscript
+        node app.js
+        ```  
+After running backend server successfully you should see variables changing which are described in `items.js` 
 
-```shellscript
-npm run dev
-```
-
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
-```
-
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
