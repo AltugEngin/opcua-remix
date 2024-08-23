@@ -2,8 +2,10 @@ const { OPCUAClient, TimestampsToReturn } = require("node-opcua");
 const app=require("express")()
 
 const {itemsToMonitor}=require('./items')
-//const endpointUrl = "opc.tcp://192.168.54.54:49320";
-const endpointUrl = "opc.tcp://192.168.241.1:49320";
+const endpointUrl = "opc.tcp://192.168.54.54:49320";
+//const endpointUrl = "opc.tcp://192.168.241.1:49320";
+// const endpointUrl="opc.tcp://172.16.7.252:32210/UA/VSE/Server/"
+
 const port=5000
 
 let client, session, subscription;
